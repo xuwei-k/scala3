@@ -146,6 +146,7 @@ object Parsers {
     def isNumericLit = numericLitTokens contains in.token
     def isModifier = modifierTokens contains in.token
     def isExprIntro = canStartExpressionTokens contains in.token
+    def isBindingIntro = canStartBindingTokens contains in.token
     def isTemplateIntro = templateIntroTokens contains in.token
     def isDclIntro = dclIntroTokens contains in.token
     def isStatSeqEnd = in.token == RBRACE || in.token == EOF
@@ -947,14 +948,14 @@ object Parsers {
       }
     }
 
-    /** Expr              ::=  FunParams `=>' Expr
+    /** Expr              ::=  [`implicit'] FunParams `=>' Expr
      *                      |  Expr1
      *  FunParams         ::=  Bindings
-     *                      |  [`implicit'] Id
+     *                      |  Id
      *                      |  `_'
      *  ExprInParens      ::=  PostfixExpr `:' Type
      *                      |  Expr
-     *  BlockResult       ::=  (FunParams | [`implicit'] Id `:' InfixType) => Block
+     *  BlockResult       ::=  [`implicit'] FunParams `=>' Block
      *                      |  Expr1
      *  Expr1             ::=  `if' `(' Expr `)' {nl} Expr [[semi] else Expr]
      *                      |  `if' Expr `then' Expr [[semi] else Expr]
@@ -981,22 +982,27 @@ object Parsers {
     def expr(): Tree = expr(Location.ElseWhere)
 
     def expr(location: Location.Value): Tree = {
-      val saved = placeholderParams
-      placeholderParams = Nil
-      val t = expr1(location)
-      if (in.token == ARROW) {
-        placeholderParams = saved
-        closureRest(startOffset(t), location, convertToParams(t))
+      val start = in.offset
+      if (in.token == IMPLICIT)
+        implicitClosure(start, location, implicitMods())
+      else {
+        val saved = placeholderParams
+        placeholderParams = Nil
+        val t = expr1(location)
+        if (in.token == ARROW) {
+          placeholderParams = saved
+          closureRest(start, location, convertToParams(t))
+        }
+        else if (isWildcard(t)) {
+          placeholderParams = placeholderParams ::: saved
+          t
+        }
+        else
+          try
+            if (placeholderParams.isEmpty) t
+            else new WildcardFunction(placeholderParams.reverse, t)
+          finally placeholderParams = saved
       }
-      else if (isWildcard(t)) {
-        placeholderParams = placeholderParams ::: saved
-        t
-      }
-      else
-        try
-          if (placeholderParams.isEmpty) t
-          else new WildcardFunction(placeholderParams.reverse, t)
-        finally placeholderParams = saved
     }
 
     def expr1(location: Location.Value = Location.ElseWhere): Tree = in.token match {
@@ -1062,8 +1068,6 @@ object Parsers {
         atPos(in.skipToken()) { Return(if (isExprIntro) expr() else EmptyTree, EmptyTree) }
       case FOR =>
         forExpr()
-      case IMPLICIT =>
-        implicitClosure(in.offset, location, atPos(in.skipToken()) { Mod.Implicit() })
       case _ =>
         expr1Rest(postfixExpr(), location)
     }
@@ -1111,19 +1115,43 @@ object Parsers {
       }
     }
 
-    /** Expr         ::= implicit Id `=>' Expr
-     *  BlockResult  ::= implicit Id [`:' InfixType] `=>' Block
+    /** FunParams         ::=  Bindings
+     *                     |   Id
+     *                     |   `_'
+     *  Bindings          ::=  `(' [Binding {`,' Binding}] `)'
      */
-    def implicitClosure(start: Int, location: Location.Value, implicitMod: Mod): Tree = {
-      val mods = Modifiers(Implicit).withAddedMod(implicitMod)
-      val id = termIdent()
-      val paramExpr =
-        if (location == Location.InBlock && in.token == COLON)
-          atPos(startOffset(id), in.skipToken()) { Typed(id, infixType()) }
-        else
-          id
-      closureRest(start, location, convertToParam(paramExpr, mods) :: Nil)
-    }
+    def funParams(mods: Modifiers, location: Location.Value): List[Tree] =
+      if (in.token == LPAREN)
+        inParens(if (in.token == RPAREN) Nil else commaSeparated(() => binding(mods)))
+      else {
+        val start = in.offset
+        val name = bindingName()
+        val t =
+          if (in.token == COLON && location == Location.InBlock) {
+            in.nextToken()
+            infixType()
+          }
+          else TypeTree()
+        (atPos(start) { makeParameter(name, t, mods) }) :: Nil
+      }
+
+    /**  Binding           ::= (Id | `_') [`:' Type]
+     */
+    def binding(mods: Modifiers): Tree =
+      atPos(in.offset) { makeParameter(bindingName(), typedOpt(), mods) }
+
+    def bindingName(): TermName =
+      if (in.token == USCORE) {
+        in.nextToken()
+        ctx.freshName(nme.USCORE_PARAM_PREFIX).toTermName
+      }
+      else ident()
+
+    /** Expr         ::= implicit Id `=>' Expr
+     *  BlockResult  ::= implicit Id [`:' InfixType] `=>' Block // Scala2 only
+     */
+    def implicitClosure(start: Int, location: Location.Value, implicitMods: Modifiers): Tree =
+      closureRest(start, location, funParams(implicitMods, location))
 
     def closureRest(start: Int, location: Location.Value, params: List[Tree]): Tree =
       atPos(start, in.offset) {
@@ -1577,6 +1605,9 @@ object Parsers {
       normalize(loop(start))
     }
 
+    def implicitMods(): Modifiers =
+      addMod(EmptyModifiers, atPos(accept(IMPLICIT)) { Mod.Implicit() })
+
     /** Wrap annotation or constructor in New(...).<init> */
     def wrapNew(tpt: Tree) = Select(New(tpt), nme.CONSTRUCTOR)
 
@@ -1682,9 +1713,9 @@ object Parsers {
      *  Param             ::=  id `:' ParamType [`=' Expr]
      */
     def paramClauses(owner: Name, ofCaseClass: Boolean = false): List[List[ValDef]] = {
-      var implicitMod: Mod  = null
-      var firstClauseOfCaseClass = ofCaseClass
+      var imods: Modifiers = EmptyModifiers
       var implicitOffset = -1 // use once
+      var firstClauseOfCaseClass = ofCaseClass
       def param(): ValDef = {
         val start = in.offset
         var mods = annotsAsMods()
@@ -1719,7 +1750,7 @@ object Parsers {
               if (in.token == ARROW) {
                 if (owner.isTypeName && !(mods is Local))
                   syntaxError(s"${if (mods is Mutable) "`var'" else "`val'"} parameters may not be call-by-name")
-                else if (implicitMod != null)
+                else if (imods.hasFlags)
                   syntaxError("implicit parameters may not be call-by-name")
               }
               paramType()
@@ -1731,7 +1762,7 @@ object Parsers {
             mods = mods.withPos(mods.pos.union(Position(implicitOffset, implicitOffset)))
             implicitOffset = -1
           }
-          if (implicitMod != null) mods = addMod(mods, implicitMod)
+          for (imod <- imods.mods) mods = addMod(mods, imod)
           ValDef(name, tpt, default).withMods(mods)
         }
       }
@@ -1740,7 +1771,7 @@ object Parsers {
         else {
           if (in.token == IMPLICIT) {
             implicitOffset = in.offset
-            implicitMod = atPos(in.skipToken()) { Mod.Implicit() }
+            imods = implicitMods()
           }
           commaSeparated(param)
         }
@@ -1750,7 +1781,7 @@ object Parsers {
         if (in.token == LPAREN)
           paramClause() :: {
             firstClauseOfCaseClass = false
-            if (implicitMod == null) clauses() else Nil
+            if (imods.hasFlags) Nil else clauses()
           }
         else Nil
       }
@@ -2213,9 +2244,9 @@ object Parsers {
       stats.toList
     }
 
-    def localDef(start: Int, implicitMod: Option[Mod] = None): Tree = {
+    def localDef(start: Int, implicitMods: Modifiers = EmptyModifiers): Tree = {
       var mods = defAnnotsMods(localModifierTokens)
-      for (imod <- implicitMod) mods = (mods | ImplicitCommon).withAddedMod(imod)
+      for (imod <- implicitMods.mods) mods = addMod(mods, imod)
       defOrDcl(start, mods)
     }
 
@@ -2238,9 +2269,9 @@ object Parsers {
         else if (isDefIntro(localModifierTokens))
           if (in.token == IMPLICIT) {
             val start = in.offset
-            val mod = atPos(in.skipToken()) { Mod.Implicit() }
-            if (isIdent) stats += implicitClosure(start, Location.InBlock, mod)
-            else stats += localDef(start, Some(mod))
+            val imods = implicitMods()
+            if (isBindingIntro) stats += implicitClosure(start, Location.InBlock, imods)
+            else stats += localDef(start, imods)
           } else {
             stats += localDef(in.offset)
           }
