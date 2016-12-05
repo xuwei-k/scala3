@@ -124,6 +124,13 @@ object desugar {
     else vdef
   }
 
+  def makeImplicitParameters(tpts: List[Tree], forPrimaryConstructor: Boolean)(implicit ctx: Context) =
+    for (tpt <- tpts) yield {
+       val paramFlags: FlagSet = if (forPrimaryConstructor) PrivateLocalParamAccessor else Param
+       val epname = ctx.freshName(nme.EVIDENCE_PARAM_PREFIX).toTermName
+       ValDef(epname, tpt, EmptyTree).withFlags(paramFlags | Implicit)
+    }
+
   /** Expand context bounds to evidence params. E.g.,
    *
    *      def f[T >: L <: H : B](params)
@@ -144,11 +151,7 @@ object desugar {
     val epbuf = new ListBuffer[ValDef]
     val tparams1 = tparams mapConserve {
       case tparam @ TypeDef(_, ContextBounds(tbounds, cxbounds)) =>
-        for (cxbound <- cxbounds) {
-          val paramFlags: FlagSet = if (isPrimaryConstructor) PrivateLocalParamAccessor else Param
-          val epname = ctx.freshName(nme.EVIDENCE_PARAM_PREFIX).toTermName
-          epbuf += ValDef(epname, cxbound, EmptyTree).withFlags(paramFlags | Implicit)
-        }
+        epbuf ++= makeImplicitParameters(cxbounds, isPrimaryConstructor)
         cpy.TypeDef(tparam)(rhs = tbounds)
       case tparam =>
         tparam
@@ -674,6 +677,11 @@ object desugar {
           DefDef(param.name, Nil, Nil, TypeTree(), selector(idx)).withPos(param.pos)
       }
     Function(param :: Nil, Block(vdefs, body))
+  }
+
+  def makeImplicitFunction(formals: List[Type], body: Tree)(implicit ctx: Context): Tree = {
+    val params = makeImplicitParameters(formals.map(TypeTree), forPrimaryConstructor = false)
+    new ImplicitFunction(params, body)
   }
 
   /** Add annotation with class `cls` to tree:
