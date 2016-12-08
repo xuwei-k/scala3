@@ -1,0 +1,6 @@
+language: scala
+sudo: false
+jdk:
+- oraclejdk8
+script:
+- sbt "dotc tests/pos/Cofree.scala" "dotr com.example.Main"
