@@ -1162,21 +1162,22 @@ trait Implicits { self: Typer =>
        *  is underconstrained. So we look for "small" goals first, because that
        *  will give an ambiguity quickly.
        */
-      def prefer(cand1: Candidate, cand2: Candidate): Boolean = {
+      val candidateOrdering: Ordering[Candidate] = { (cand1, cand2) =>
         val level1 = cand1.level
         val level2 = cand2.level
-        if (level1 > level2) return true
-        if (level1 < level2) return false
-        val sym1 = cand1.ref.symbol
-        val sym2 = cand2.ref.symbol
-        val ownerScore = compareOwner(sym1.maybeOwner, sym2.maybeOwner)
-        if (ownerScore > 0) return true
-        if (ownerScore < 0) return false
-        val arity1 = sym1.info.firstParamTypes.length
-        val arity2 = sym2.info.firstParamTypes.length
-        if (arity1 < arity2) return true
-        if (arity1 > arity2) return false
-        false
+        Ordering[Int].compare(level1, level1) match {
+          case 0 =>
+            val sym1 = cand1.ref.symbol
+            val sym2 = cand2.ref.symbol
+            compareOwner(sym1.maybeOwner, sym2.maybeOwner) match {
+              case 0 =>
+                val arity1 = sym1.info.firstParamTypes.length
+                val arity2 = sym2.info.firstParamTypes.length
+                Ordering[Int].compare(arity1, arity2)
+              case x => x
+            }
+          case x => x
+        }
       }
 
       /** Sort list of implicit references according to `prefer`.
@@ -1187,10 +1188,10 @@ trait Implicits { self: Typer =>
         case Nil => eligible
         case e1 :: Nil => eligible
         case e1 :: e2 :: Nil =>
-          if (prefer(e2, e1)) e2 :: e1 :: Nil
+          if (candidateOrdering.gt(e2, e1)) e2 :: e1 :: Nil
           else eligible
         case _ =>
-          eligible.sortWith(prefer)
+          eligible.sorted(candidateOrdering)
       }
 
       rank(sort(eligible), NoMatchingImplicitsFailure, Nil)
