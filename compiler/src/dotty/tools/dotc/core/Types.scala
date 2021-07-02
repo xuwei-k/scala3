@@ -1282,10 +1282,13 @@ object Types {
       case tp =>
         tp.widenUnionWithoutNull
 
-    /** Overridden in OrType */
     def widenUnionWithoutNull(using Context): Type = widen match
-      case tp: AndType =>
-        tp.derivedAndType(tp.tp1.widenUnionWithoutNull, tp.tp2.widenUnionWithoutNull)
+      case tp @ OrType(lhs, rhs) if tp.isSoft =>
+        TypeComparer.lub(lhs.widenUnionWithoutNull, rhs.widenUnionWithoutNull, canConstrain = true) match
+          case union: OrType => union.join
+          case res => res
+      case tp: AndOrType =>
+        tp.derivedAndOrType(tp.tp1.widenUnionWithoutNull, tp.tp2.widenUnionWithoutNull)
       case tp: RefinedType =>
         tp.derivedRefinedType(tp.parent.widenUnion, tp.refinedName, tp.refinedInfo)
       case tp: RecType =>
@@ -3233,20 +3236,6 @@ object Types {
       }
       myJoin
     }
-
-    private var myUnion: Type = _
-    private var myUnionPeriod: Period = Nowhere
-
-    override def widenUnionWithoutNull(using Context): Type =
-      if myUnionPeriod != ctx.period then
-        myUnion =
-          if isSoft then
-            TypeComparer.lub(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull, canConstrain = true) match
-              case union: OrType => union.join
-              case res => res
-          else derivedOrType(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull)
-        if !isProvisional then myUnionPeriod = ctx.period
-      myUnion
 
     private var atomsRunId: RunId = NoRunId
     private var myAtoms: Atoms = _
