@@ -3234,19 +3234,22 @@ object Types {
       myJoin
     }
 
-    private var myUnion: Type = _
+    private var myUnion: WeakReference[Type] = _
     private var myUnionPeriod: Period = Nowhere
 
     override def widenUnionWithoutNull(using Context): Type =
+      var myUnion0 = if myUnion != null then myUnion.get else null
       if myUnionPeriod != ctx.period then
-        myUnion =
-          if isSoft then
-            TypeComparer.lub(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull, canConstrain = true) match
-              case union: OrType => union.join
-              case res => res
-          else derivedOrType(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull)
+        if myUnion0 == null then
+          myUnion0 =
+            if isSoft then
+              TypeComparer.lub(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull, canConstrain = true) match
+                case union: OrType => union.join
+                case res => res
+            else derivedOrType(tp1.widenUnionWithoutNull, tp2.widenUnionWithoutNull)
+          myUnion = new WeakReference(myUnion0)
         if !isProvisional then myUnionPeriod = ctx.period
-      myUnion
+      myUnion0
 
     private var atomsRunId: RunId = NoRunId
     private var myAtoms: Atoms = _
