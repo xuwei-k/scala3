@@ -39,13 +39,41 @@ object GenericSignatures {
       if (sym0.isLocal && !sym0.isClass) None
       else atPhase(erasurePhase)(javaSig0(sym0, info))
     }
-    println(x)
+    //println(x)
     x
+  }
+
+  final class MyBuilder {
+    private[this] val x = new StringBuilder(64)
+    def append(s: String) = {
+      /*
+      println("=" * 100)
+      println(s)
+      (new Error).getStackTrace().take(20).foreach(println)
+      println("*" * 100)
+      */
+      x.append(s)
+    }
+    def append(c: Char) = {
+      /*
+      println("-" * 100)
+      println(c)
+      (new Error).getStackTrace().take(20).foreach(println)
+      println("p" * 100)
+      */
+      x.append(c)
+    }
+    def append(any: AnyRef) = x.append(any)
+    def charAt(i: Int) = x.charAt(i)
+    def delete(x1: Int, x2: Int) = x.delete(x1, x2)
+    def length() = x.length
+    override def toString = x.toString
   }
 
   @noinline
   private final def javaSig0(sym0: Symbol, info: Type)(using Context): Option[String] = {
-    val builder = new StringBuilder(64)
+    val builder = new MyBuilder
+
     val isTraitSignature = sym0.enclosingClass.is(Trait)
 
     def superSig(cls: Symbol, parents: List[Type]): Unit = {
@@ -296,7 +324,7 @@ object GenericSignatures {
 
         case PolyType(tparams, mtpe: MethodType) =>
           assert(tparams.nonEmpty)
-          if (toplevel) polyParamSig(tparams)
+          if (toplevel && !sym0.isConstructor) polyParamSig(tparams)
           jsig(mtpe)
 
         // Nullary polymorphic method
