@@ -1,6 +1,7 @@
 package dotty.tools.dotc.profile
 
 import scala.annotation.*
+import scala.collection.mutable.ArrayBuffer
 import scala.language.unsafeNulls
 
 import java.io.{FileWriter, PrintWriter}
@@ -19,7 +20,7 @@ object Profiler {
     if (!ctx.settings.YprofileEnabled.value) NoOpProfiler
     else {
       val reporter = if (ctx.settings.YprofileDestination.value != "")
-        new StreamProfileReporter(new PrintWriter(new FileWriter(ctx.settings.YprofileDestination.value, true)))
+        new StreamProfileReporter(new PrintWriter(new FileWriter(ctx.settings.YprofileDestination.value, false)))
       else ConsoleProfileReporter
       new RealProfiler(reporter)
     }
@@ -235,11 +236,17 @@ object ConsoleProfileReporter extends ProfileReporter {
     println(s"Profiler GC reported ${data.gcEndMillis - data.gcStartMillis}ms")
 }
 
-class StreamProfileReporter(out:PrintWriter) extends ProfileReporter {
+class StreamProfileReporter(out: PrintWriter) extends ProfileReporter {
+  private[this] val values = new ArrayBuffer[String]
+  private[this] val lock = new Object
+  private def append(str: String): Unit = {
+    lock.synchronized {
+      values.append(str)
+    }
+  }
+
   override def header(profiler: RealProfiler): Unit = {
-    out.println(s"info, ${profiler.id}, version, 2, output, ${profiler.outDir}")
-    out.println(s"header(main/background),startNs,endNs,runId,phaseId,phaseName,purpose,task-count,threadId,threadName,runNs,idleNs,cpuTimeNs,userTimeNs,allocatedByte,heapSize")
-    out.println(s"header(GC),startNs,endNs,startMs,endMs,name,action,cause,threads")
+    out.println("""{"traceEvents":[""")
   }
 
   override def reportBackground(profiler: RealProfiler, threadRange: ProfileRange): Unit =
@@ -247,18 +254,31 @@ class StreamProfileReporter(out:PrintWriter) extends ProfileReporter {
   override def reportForeground(profiler: RealProfiler, threadRange: ProfileRange): Unit =
     reportCommon(EventType.MAIN, profiler, threadRange)
   @nowarn("cat=deprecation")
-  private def reportCommon(tpe:EventType, profiler: RealProfiler, threadRange: ProfileRange): Unit =
-    out.println(s"$tpe,${threadRange.start.snapTimeNanos},${threadRange.end.snapTimeNanos},${profiler.id},${threadRange.phase.id},${threadRange.phase.phaseName.replace(',', ' ')},${threadRange.purpose},${threadRange.taskCount},${threadRange.thread.getId},${threadRange.thread.getName},${threadRange.runNs},${threadRange.idleNs},${threadRange.cpuNs},${threadRange.userNs},${threadRange.allocatedBytes},${threadRange.end.heapBytes} ")
+  private def reportCommon(tpe:EventType, profiler: RealProfiler, threadRange: ProfileRange): Unit = {
+    append(s"""{"name":"${threadRange.phase.phaseName}","cat":"${tpe.name}","ph":"X","ts":${TimeUnit.NANOSECONDS.toMicros(threadRange.start.snapTimeNanos)},"dur":${TimeUnit.NANOSECONDS.toMicros(threadRange.runNs)},"pid":0,"tid":${threadRange.thread.getId}}""")
+  }
 
   override def reportGc(data: GcEventData): Unit = {
-    val duration = TimeUnit.MILLISECONDS.toNanos(data.gcEndMillis - data.gcStartMillis + 1)
-    val start = data.reportTimeNs - duration
-    out.println(s"${EventType.GC},$start,${data.reportTimeNs},${data.gcStartMillis}, ${data.gcEndMillis},${data.name},${data.action},${data.cause},${data.threads}")
+    val duration = data.gcEndMillis - data.gcStartMillis + 1
+    val start = TimeUnit.NANOSECONDS.toMicros(data.reportTimeNs) - duration
+    append(s"""{"name":"gc","cat":"gc","ph":"X","ts":${start},"dur":${duration},"pid":0}""")
   }
 
 
   override def close(profiler: RealProfiler): Unit = {
-    out.flush
-    out.close
+    lock.synchronized {
+      values.toSeq match {
+        case xs :+ last =>
+          xs.foreach {x =>
+            out.print(x)
+            out.println(",")
+          }
+          out.println(last)
+        case _ =>
+      }
+    }
+    out.println("\n]}")
+    out.flush()
+    out.close()
   }
 }
