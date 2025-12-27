@@ -123,10 +123,10 @@ public final class BoxesRunTime
      *  in any case, we dispatch to it as soon as we spot one on either side.
      */
     public static boolean equals2(Object x, Object y) {
-        if (x instanceof java.lang.Number)
-            return equalsNumObject((java.lang.Number)x, y);
-        if (x instanceof java.lang.Character)
-            return equalsCharObject((java.lang.Character)x, y);
+        if (x instanceof java.lang.Number n)
+            return equalsNumObject(n, y);
+        if (x instanceof java.lang.Character n)
+            return equalsCharObject(n, y);
         if (x == null)
             return y == null;
 
@@ -134,10 +134,10 @@ public final class BoxesRunTime
     }
 
     public static boolean equalsNumObject(java.lang.Number xn, Object y) {
-        if (y instanceof java.lang.Number)
-            return equalsNumNum(xn, (java.lang.Number)y);
-        if (y instanceof java.lang.Character)
-            return equalsNumChar(xn, (java.lang.Character)y);
+        if (y instanceof java.lang.Number n)
+            return equalsNumNum(xn, n);
+        if (y instanceof java.lang.Character n)
+            return equalsNumChar(xn, n);
         if (xn == null)
             return y == null;
 
@@ -167,10 +167,10 @@ public final class BoxesRunTime
     }
 
     public static boolean equalsCharObject(java.lang.Character xc, Object y) {
-        if (y instanceof java.lang.Character)
-            return xc.charValue() == ((java.lang.Character)y).charValue();
-        if (y instanceof java.lang.Number)
-            return equalsNumChar((java.lang.Number)y, xc);
+        if (y instanceof java.lang.Character n)
+            return xc.charValue() == n.charValue();
+        if (y instanceof java.lang.Number n)
+            return equalsNumChar(n, xc);
         if (xc == null)
             return y == null;
 
@@ -449,8 +449,8 @@ public final class BoxesRunTime
     /** arg1 & arg2 */
     public static Object takeAnd(Object arg1, Object arg2) throws NoSuchMethodException {
         if ((arg1 instanceof Boolean) || (arg2 instanceof Boolean)) {
-            if ((arg1 instanceof Boolean) && (arg2 instanceof Boolean))
-                return boxToBoolean(((java.lang.Boolean) arg1).booleanValue() & ((java.lang.Boolean) arg2).booleanValue());
+            if ((arg1 instanceof Boolean a1) && (arg2 instanceof Boolean a2))
+                return boxToBoolean(a1.booleanValue() & a2.booleanValue());
             else
                 throw new NoSuchMethodException();
         }
@@ -469,8 +469,8 @@ public final class BoxesRunTime
     /** arg1 | arg2 */
     public static Object takeOr(Object arg1, Object arg2) throws NoSuchMethodException {
         if ((arg1 instanceof Boolean) || (arg2 instanceof Boolean)) {
-            if ((arg1 instanceof Boolean) && (arg2 instanceof Boolean))
-                return boxToBoolean(((java.lang.Boolean) arg1).booleanValue() | ((java.lang.Boolean) arg2).booleanValue());
+            if ((arg1 instanceof Boolean a1) && (arg2 instanceof Boolean a2))
+                return boxToBoolean(a1.booleanValue() | a2.booleanValue());
             else
                 throw new NoSuchMethodException();
         }

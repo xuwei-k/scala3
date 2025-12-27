@@ -115,22 +115,22 @@ public final class Statics {
     if (x == null)
       return 0;
 
-    if (x instanceof java.lang.Number) {
-      return anyHashNumber((java.lang.Number) x);
+    if (x instanceof java.lang.Number n) {
+      return anyHashNumber(n);
     }
 
     return x.hashCode();
   }
 
   private static int anyHashNumber(Number x) {
-    if (x instanceof java.lang.Long)
-      return longHash(((java.lang.Long)x).longValue());
+    if (x instanceof java.lang.Long n)
+      return longHash(n.longValue());
   
-    if (x instanceof java.lang.Double)
-      return doubleHash(((java.lang.Double)x).doubleValue());
+    if (x instanceof java.lang.Double n)
+      return doubleHash(n.doubleValue());
   
-    if (x instanceof java.lang.Float)
-      return floatHash(((java.lang.Float)x).floatValue());
+    if (x instanceof java.lang.Float n)
+      return floatHash(n.floatValue());
 
     return x.hashCode();
   }
