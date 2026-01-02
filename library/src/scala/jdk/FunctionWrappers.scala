@@ -24,7 +24,7 @@ object FunctionWrappers {
   
   class RichBiConsumerAsFunction2[T, U](private val underlying: java.util.function.BiConsumer[T, U]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, Unit] = underlying match {
-      case AsJavaBiConsumer((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, Unit]]
+      case AsJavaBiConsumer((sf @ _)) => sf
       case _ => new FromJavaBiConsumer[T, U](underlying)
     }
   }
@@ -51,7 +51,7 @@ object FunctionWrappers {
   
   class RichBiFunctionAsFunction2[T, U, R](private val underlying: java.util.function.BiFunction[T, U, R]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, R] = underlying match {
-      case AsJavaBiFunction((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, R]]
+      case AsJavaBiFunction((sf @ _)) => sf
       case _ => new FromJavaBiFunction[T, U, R](underlying)
     }
   }
@@ -78,7 +78,7 @@ object FunctionWrappers {
   
   class RichBiPredicateAsFunction2[T, U](private val underlying: java.util.function.BiPredicate[T, U]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, Boolean] = underlying match {
-      case AsJavaBiPredicate((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, Boolean]]
+      case AsJavaBiPredicate((sf @ _)) => sf
       case _ => new FromJavaBiPredicate[T, U](underlying)
     }
   }
@@ -105,7 +105,7 @@ object FunctionWrappers {
   
   class RichBinaryOperatorAsFunction2[T](private val underlying: java.util.function.BinaryOperator[T]) extends AnyVal {
     @inline def asScala: scala.Function2[T, T, T] = underlying match {
-      case AsJavaBinaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function2[T, T, T]]
+      case AsJavaBinaryOperator((sf @ _)) => sf
       case _ => new FromJavaBinaryOperator[T](underlying)
     }
   }
@@ -116,11 +116,11 @@ object FunctionWrappers {
   
   class RichFunction2AsBinaryOperator[T](private val underlying: scala.Function2[T, T, T]) extends AnyVal {
     @inline def asJava: java.util.function.BinaryOperator[T] = underlying match {
-      case FromJavaBinaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.BinaryOperator[T]]
+      case FromJavaBinaryOperator((jf @ _)) => jf
       case _ => new AsJavaBinaryOperator[T](underlying)
     };
     @inline def asJavaBinaryOperator: java.util.function.BinaryOperator[T] = underlying match {
-      case FromJavaBinaryOperator((sf @ _)) => sf.asInstanceOf[java.util.function.BinaryOperator[T]]
+      case FromJavaBinaryOperator((sf @ _)) => sf
       case _ => new AsJavaBinaryOperator[T](underlying)
     }
   }
@@ -132,7 +132,7 @@ object FunctionWrappers {
   
   class RichBooleanSupplierAsFunction0(private val underlying: java.util.function.BooleanSupplier) extends AnyVal {
     @inline def asScala: scala.Function0[Boolean] = underlying match {
-      case AsJavaBooleanSupplier((sf @ _)) => sf.asInstanceOf[scala.Function0[Boolean]]
+      case AsJavaBooleanSupplier((sf @ _)) => sf
       case _ => new FromJavaBooleanSupplier(underlying)
     }
   }
@@ -143,7 +143,7 @@ object FunctionWrappers {
   
   class RichFunction0AsBooleanSupplier(private val underlying: scala.Function0[Boolean]) extends AnyVal {
     @inline def asJava: java.util.function.BooleanSupplier = underlying match {
-      case FromJavaBooleanSupplier((jf @ _)) => jf.asInstanceOf[java.util.function.BooleanSupplier]
+      case FromJavaBooleanSupplier((jf @ _)) => jf
       case _ => new AsJavaBooleanSupplier(underlying)
     }
   }
@@ -155,7 +155,7 @@ object FunctionWrappers {
   
   class RichConsumerAsFunction1[T](private val underlying: java.util.function.Consumer[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, Unit] = underlying match {
-      case AsJavaConsumer((sf @ _)) => sf.asInstanceOf[scala.Function1[T, Unit]]
+      case AsJavaConsumer((sf @ _)) => sf
       case _ => new FromJavaConsumer[T](underlying)
     }
   }
@@ -182,7 +182,7 @@ object FunctionWrappers {
   
   class RichDoubleBinaryOperatorAsFunction2(private val underlying: java.util.function.DoubleBinaryOperator) extends AnyVal {
     @inline def asScala: scala.Function2[Double, Double, Double] = underlying match {
-      case AsJavaDoubleBinaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function2[Double, Double, Double]]
+      case AsJavaDoubleBinaryOperator((sf @ _)) => sf
       case _ => new FromJavaDoubleBinaryOperator(underlying)
     }
   }
@@ -193,7 +193,7 @@ object FunctionWrappers {
   
   class RichFunction2AsDoubleBinaryOperator(private val underlying: scala.Function2[Double, Double, Double]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleBinaryOperator = underlying match {
-      case FromJavaDoubleBinaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleBinaryOperator]
+      case FromJavaDoubleBinaryOperator((jf @ _)) => jf
       case _ => new AsJavaDoubleBinaryOperator(underlying)
     }
   }
@@ -205,7 +205,7 @@ object FunctionWrappers {
   
   class RichDoubleConsumerAsFunction1(private val underlying: java.util.function.DoubleConsumer) extends AnyVal {
     @inline def asScala: scala.Function1[Double, Unit] = underlying match {
-      case AsJavaDoubleConsumer((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, Unit]]
+      case AsJavaDoubleConsumer((sf @ _)) => sf
       case _ => new FromJavaDoubleConsumer(underlying)
     }
   }
@@ -216,7 +216,7 @@ object FunctionWrappers {
   
   class RichFunction1AsDoubleConsumer(private val underlying: scala.Function1[Double, Unit]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleConsumer = underlying match {
-      case FromJavaDoubleConsumer((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleConsumer]
+      case FromJavaDoubleConsumer((jf @ _)) => jf
       case _ => new AsJavaDoubleConsumer(underlying)
     }
   }
@@ -228,7 +228,7 @@ object FunctionWrappers {
   
   class RichDoubleFunctionAsFunction1[R](private val underlying: java.util.function.DoubleFunction[R]) extends AnyVal {
     @inline def asScala: scala.Function1[Double, R] = underlying match {
-      case AsJavaDoubleFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, R]]
+      case AsJavaDoubleFunction((sf @ _)) => sf
       case _ => new FromJavaDoubleFunction[R](underlying)
     }
   }
@@ -255,7 +255,7 @@ object FunctionWrappers {
   
   class RichDoublePredicateAsFunction1(private val underlying: java.util.function.DoublePredicate) extends AnyVal {
     @inline def asScala: scala.Function1[Double, Boolean] = underlying match {
-      case AsJavaDoublePredicate((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, Boolean]]
+      case AsJavaDoublePredicate((sf @ _)) => sf
       case _ => new FromJavaDoublePredicate(underlying)
     }
   }
@@ -266,7 +266,7 @@ object FunctionWrappers {
   
   class RichFunction1AsDoublePredicate(private val underlying: scala.Function1[Double, Boolean]) extends AnyVal {
     @inline def asJava: java.util.function.DoublePredicate = underlying match {
-      case FromJavaDoublePredicate((jf @ _)) => jf.asInstanceOf[java.util.function.DoublePredicate]
+      case FromJavaDoublePredicate((jf @ _)) => jf
       case _ => new AsJavaDoublePredicate(underlying)
     }
   }
@@ -278,7 +278,7 @@ object FunctionWrappers {
   
   class RichDoubleSupplierAsFunction0(private val underlying: java.util.function.DoubleSupplier) extends AnyVal {
     @inline def asScala: scala.Function0[Double] = underlying match {
-      case AsJavaDoubleSupplier((sf @ _)) => sf.asInstanceOf[scala.Function0[Double]]
+      case AsJavaDoubleSupplier((sf @ _)) => sf
       case _ => new FromJavaDoubleSupplier(underlying)
     }
   }
@@ -289,7 +289,7 @@ object FunctionWrappers {
   
   class RichFunction0AsDoubleSupplier(private val underlying: scala.Function0[Double]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleSupplier = underlying match {
-      case FromJavaDoubleSupplier((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleSupplier]
+      case FromJavaDoubleSupplier((jf @ _)) => jf
       case _ => new AsJavaDoubleSupplier(underlying)
     }
   }
@@ -301,7 +301,7 @@ object FunctionWrappers {
   
   class RichDoubleToIntFunctionAsFunction1(private val underlying: java.util.function.DoubleToIntFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Double, Int] = underlying match {
-      case AsJavaDoubleToIntFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, Int]]
+      case AsJavaDoubleToIntFunction((sf @ _)) => sf
       case _ => new FromJavaDoubleToIntFunction(underlying)
     }
   }
@@ -312,7 +312,7 @@ object FunctionWrappers {
   
   class RichFunction1AsDoubleToIntFunction(private val underlying: scala.Function1[Double, Int]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleToIntFunction = underlying match {
-      case FromJavaDoubleToIntFunction((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleToIntFunction]
+      case FromJavaDoubleToIntFunction((jf @ _)) => jf
       case _ => new AsJavaDoubleToIntFunction(underlying)
     }
   }
@@ -324,7 +324,7 @@ object FunctionWrappers {
   
   class RichDoubleToLongFunctionAsFunction1(private val underlying: java.util.function.DoubleToLongFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Double, Long] = underlying match {
-      case AsJavaDoubleToLongFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, Long]]
+      case AsJavaDoubleToLongFunction((sf @ _)) => sf
       case _ => new FromJavaDoubleToLongFunction(underlying)
     }
   }
@@ -335,7 +335,7 @@ object FunctionWrappers {
   
   class RichFunction1AsDoubleToLongFunction(private val underlying: scala.Function1[Double, Long]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleToLongFunction = underlying match {
-      case FromJavaDoubleToLongFunction((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleToLongFunction]
+      case FromJavaDoubleToLongFunction((jf @ _)) => jf
       case _ => new AsJavaDoubleToLongFunction(underlying)
     }
   }
@@ -347,7 +347,7 @@ object FunctionWrappers {
   
   class RichDoubleUnaryOperatorAsFunction1(private val underlying: java.util.function.DoubleUnaryOperator) extends AnyVal {
     @inline def asScala: scala.Function1[Double, Double] = underlying match {
-      case AsJavaDoubleUnaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function1[Double, Double]]
+      case AsJavaDoubleUnaryOperator((sf @ _)) => sf
       case _ => new FromJavaDoubleUnaryOperator(underlying)
     }
   }
@@ -358,7 +358,7 @@ object FunctionWrappers {
   
   class RichFunction1AsDoubleUnaryOperator(private val underlying: scala.Function1[Double, Double]) extends AnyVal {
     @inline def asJava: java.util.function.DoubleUnaryOperator = underlying match {
-      case FromJavaDoubleUnaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.DoubleUnaryOperator]
+      case FromJavaDoubleUnaryOperator((jf @ _)) => jf
       case _ => new AsJavaDoubleUnaryOperator(underlying)
     }
   }
@@ -370,7 +370,7 @@ object FunctionWrappers {
   
   class RichFunctionAsFunction1[T, R](private val underlying: java.util.function.Function[T, R]) extends AnyVal {
     @inline def asScala: scala.Function1[T, R] = underlying match {
-      case AsJavaFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[T, R]]
+      case AsJavaFunction((sf @ _)) => sf
       case _ => new FromJavaFunction[T, R](underlying)
     }
   }
@@ -397,7 +397,7 @@ object FunctionWrappers {
   
   class RichIntBinaryOperatorAsFunction2(private val underlying: java.util.function.IntBinaryOperator) extends AnyVal {
     @inline def asScala: scala.Function2[Int, Int, Int] = underlying match {
-      case AsJavaIntBinaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function2[Int, Int, Int]]
+      case AsJavaIntBinaryOperator((sf @ _)) => sf
       case _ => new FromJavaIntBinaryOperator(underlying)
     }
   }
@@ -408,7 +408,7 @@ object FunctionWrappers {
   
   class RichFunction2AsIntBinaryOperator(private val underlying: scala.Function2[Int, Int, Int]) extends AnyVal {
     @inline def asJava: java.util.function.IntBinaryOperator = underlying match {
-      case FromJavaIntBinaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.IntBinaryOperator]
+      case FromJavaIntBinaryOperator((jf @ _)) => jf
       case _ => new AsJavaIntBinaryOperator(underlying)
     }
   }
@@ -420,7 +420,7 @@ object FunctionWrappers {
   
   class RichIntConsumerAsFunction1(private val underlying: java.util.function.IntConsumer) extends AnyVal {
     @inline def asScala: scala.Function1[Int, Unit] = underlying match {
-      case AsJavaIntConsumer((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, Unit]]
+      case AsJavaIntConsumer((sf @ _)) => sf
       case _ => new FromJavaIntConsumer(underlying)
     }
   }
@@ -431,7 +431,7 @@ object FunctionWrappers {
   
   class RichFunction1AsIntConsumer(private val underlying: scala.Function1[Int, Unit]) extends AnyVal {
     @inline def asJava: java.util.function.IntConsumer = underlying match {
-      case FromJavaIntConsumer((jf @ _)) => jf.asInstanceOf[java.util.function.IntConsumer]
+      case FromJavaIntConsumer((jf @ _)) => jf
       case _ => new AsJavaIntConsumer(underlying)
     }
   }
@@ -443,7 +443,7 @@ object FunctionWrappers {
   
   class RichIntFunctionAsFunction1[R](private val underlying: java.util.function.IntFunction[R]) extends AnyVal {
     @inline def asScala: scala.Function1[Int, R] = underlying match {
-      case AsJavaIntFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, R]]
+      case AsJavaIntFunction((sf @ _)) => sf
       case _ => new FromJavaIntFunction[R](underlying)
     }
   }
@@ -470,7 +470,7 @@ object FunctionWrappers {
   
   class RichIntPredicateAsFunction1(private val underlying: java.util.function.IntPredicate) extends AnyVal {
     @inline def asScala: scala.Function1[Int, Boolean] = underlying match {
-      case AsJavaIntPredicate((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, Boolean]]
+      case AsJavaIntPredicate((sf @ _)) => sf
       case _ => new FromJavaIntPredicate(underlying)
     }
   }
@@ -481,7 +481,7 @@ object FunctionWrappers {
   
   class RichFunction1AsIntPredicate(private val underlying: scala.Function1[Int, Boolean]) extends AnyVal {
     @inline def asJava: java.util.function.IntPredicate = underlying match {
-      case FromJavaIntPredicate((jf @ _)) => jf.asInstanceOf[java.util.function.IntPredicate]
+      case FromJavaIntPredicate((jf @ _)) => jf
       case _ => new AsJavaIntPredicate(underlying)
     }
   }
@@ -493,7 +493,7 @@ object FunctionWrappers {
   
   class RichIntSupplierAsFunction0(private val underlying: java.util.function.IntSupplier) extends AnyVal {
     @inline def asScala: scala.Function0[Int] = underlying match {
-      case AsJavaIntSupplier((sf @ _)) => sf.asInstanceOf[scala.Function0[Int]]
+      case AsJavaIntSupplier((sf @ _)) => sf
       case _ => new FromJavaIntSupplier(underlying)
     }
   }
@@ -504,7 +504,7 @@ object FunctionWrappers {
   
   class RichFunction0AsIntSupplier(private val underlying: scala.Function0[Int]) extends AnyVal {
     @inline def asJava: java.util.function.IntSupplier = underlying match {
-      case FromJavaIntSupplier((jf @ _)) => jf.asInstanceOf[java.util.function.IntSupplier]
+      case FromJavaIntSupplier((jf @ _)) => jf
       case _ => new AsJavaIntSupplier(underlying)
     }
   }
@@ -516,7 +516,7 @@ object FunctionWrappers {
   
   class RichIntToDoubleFunctionAsFunction1(private val underlying: java.util.function.IntToDoubleFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Int, Double] = underlying match {
-      case AsJavaIntToDoubleFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, Double]]
+      case AsJavaIntToDoubleFunction((sf @ _)) => sf
       case _ => new FromJavaIntToDoubleFunction(underlying)
     }
   }
@@ -527,7 +527,7 @@ object FunctionWrappers {
   
   class RichFunction1AsIntToDoubleFunction(private val underlying: scala.Function1[Int, Double]) extends AnyVal {
     @inline def asJava: java.util.function.IntToDoubleFunction = underlying match {
-      case FromJavaIntToDoubleFunction((jf @ _)) => jf.asInstanceOf[java.util.function.IntToDoubleFunction]
+      case FromJavaIntToDoubleFunction((jf @ _)) => jf
       case _ => new AsJavaIntToDoubleFunction(underlying)
     }
   }
@@ -539,7 +539,7 @@ object FunctionWrappers {
   
   class RichIntToLongFunctionAsFunction1(private val underlying: java.util.function.IntToLongFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Int, Long] = underlying match {
-      case AsJavaIntToLongFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, Long]]
+      case AsJavaIntToLongFunction((sf @ _)) => sf
       case _ => new FromJavaIntToLongFunction(underlying)
     }
   }
@@ -550,7 +550,7 @@ object FunctionWrappers {
   
   class RichFunction1AsIntToLongFunction(private val underlying: scala.Function1[Int, Long]) extends AnyVal {
     @inline def asJava: java.util.function.IntToLongFunction = underlying match {
-      case FromJavaIntToLongFunction((jf @ _)) => jf.asInstanceOf[java.util.function.IntToLongFunction]
+      case FromJavaIntToLongFunction((jf @ _)) => jf
       case _ => new AsJavaIntToLongFunction(underlying)
     }
   }
@@ -562,7 +562,7 @@ object FunctionWrappers {
   
   class RichIntUnaryOperatorAsFunction1(private val underlying: java.util.function.IntUnaryOperator) extends AnyVal {
     @inline def asScala: scala.Function1[Int, Int] = underlying match {
-      case AsJavaIntUnaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function1[Int, Int]]
+      case AsJavaIntUnaryOperator((sf @ _)) => sf
       case _ => new FromJavaIntUnaryOperator(underlying)
     }
   }
@@ -573,7 +573,7 @@ object FunctionWrappers {
   
   class RichFunction1AsIntUnaryOperator(private val underlying: scala.Function1[Int, Int]) extends AnyVal {
     @inline def asJava: java.util.function.IntUnaryOperator = underlying match {
-      case FromJavaIntUnaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.IntUnaryOperator]
+      case FromJavaIntUnaryOperator((jf @ _)) => jf
       case _ => new AsJavaIntUnaryOperator(underlying)
     }
   }
@@ -585,7 +585,7 @@ object FunctionWrappers {
   
   class RichLongBinaryOperatorAsFunction2(private val underlying: java.util.function.LongBinaryOperator) extends AnyVal {
     @inline def asScala: scala.Function2[Long, Long, Long] = underlying match {
-      case AsJavaLongBinaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function2[Long, Long, Long]]
+      case AsJavaLongBinaryOperator((sf @ _)) => sf
       case _ => new FromJavaLongBinaryOperator(underlying)
     }
   }
@@ -596,7 +596,7 @@ object FunctionWrappers {
   
   class RichFunction2AsLongBinaryOperator(private val underlying: scala.Function2[Long, Long, Long]) extends AnyVal {
     @inline def asJava: java.util.function.LongBinaryOperator = underlying match {
-      case FromJavaLongBinaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.LongBinaryOperator]
+      case FromJavaLongBinaryOperator((jf @ _)) => jf
       case _ => new AsJavaLongBinaryOperator(underlying)
     }
   }
@@ -608,7 +608,7 @@ object FunctionWrappers {
   
   class RichLongConsumerAsFunction1(private val underlying: java.util.function.LongConsumer) extends AnyVal {
     @inline def asScala: scala.Function1[Long, Unit] = underlying match {
-      case AsJavaLongConsumer((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, Unit]]
+      case AsJavaLongConsumer((sf @ _)) => sf
       case _ => new FromJavaLongConsumer(underlying)
     }
   }
@@ -619,7 +619,7 @@ object FunctionWrappers {
   
   class RichFunction1AsLongConsumer(private val underlying: scala.Function1[Long, Unit]) extends AnyVal {
     @inline def asJava: java.util.function.LongConsumer = underlying match {
-      case FromJavaLongConsumer((jf @ _)) => jf.asInstanceOf[java.util.function.LongConsumer]
+      case FromJavaLongConsumer((jf @ _)) => jf
       case _ => new AsJavaLongConsumer(underlying)
     }
   }
@@ -631,7 +631,7 @@ object FunctionWrappers {
   
   class RichLongFunctionAsFunction1[R](private val underlying: java.util.function.LongFunction[R]) extends AnyVal {
     @inline def asScala: scala.Function1[Long, R] = underlying match {
-      case AsJavaLongFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, R]]
+      case AsJavaLongFunction((sf @ _)) => sf
       case _ => new FromJavaLongFunction[R](underlying)
     }
   }
@@ -658,7 +658,7 @@ object FunctionWrappers {
   
   class RichLongPredicateAsFunction1(private val underlying: java.util.function.LongPredicate) extends AnyVal {
     @inline def asScala: scala.Function1[Long, Boolean] = underlying match {
-      case AsJavaLongPredicate((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, Boolean]]
+      case AsJavaLongPredicate((sf @ _)) => sf
       case _ => new FromJavaLongPredicate(underlying)
     }
   }
@@ -669,7 +669,7 @@ object FunctionWrappers {
   
   class RichFunction1AsLongPredicate(private val underlying: scala.Function1[Long, Boolean]) extends AnyVal {
     @inline def asJava: java.util.function.LongPredicate = underlying match {
-      case FromJavaLongPredicate((jf @ _)) => jf.asInstanceOf[java.util.function.LongPredicate]
+      case FromJavaLongPredicate((jf @ _)) => jf
       case _ => new AsJavaLongPredicate(underlying)
     }
   }
@@ -681,7 +681,7 @@ object FunctionWrappers {
   
   class RichLongSupplierAsFunction0(private val underlying: java.util.function.LongSupplier) extends AnyVal {
     @inline def asScala: scala.Function0[Long] = underlying match {
-      case AsJavaLongSupplier((sf @ _)) => sf.asInstanceOf[scala.Function0[Long]]
+      case AsJavaLongSupplier((sf @ _)) => sf
       case _ => new FromJavaLongSupplier(underlying)
     }
   }
@@ -692,7 +692,7 @@ object FunctionWrappers {
   
   class RichFunction0AsLongSupplier(private val underlying: scala.Function0[Long]) extends AnyVal {
     @inline def asJava: java.util.function.LongSupplier = underlying match {
-      case FromJavaLongSupplier((jf @ _)) => jf.asInstanceOf[java.util.function.LongSupplier]
+      case FromJavaLongSupplier((jf @ _)) => jf
       case _ => new AsJavaLongSupplier(underlying)
     }
   }
@@ -704,7 +704,7 @@ object FunctionWrappers {
   
   class RichLongToDoubleFunctionAsFunction1(private val underlying: java.util.function.LongToDoubleFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Long, Double] = underlying match {
-      case AsJavaLongToDoubleFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, Double]]
+      case AsJavaLongToDoubleFunction((sf @ _)) => sf
       case _ => new FromJavaLongToDoubleFunction(underlying)
     }
   }
@@ -715,7 +715,7 @@ object FunctionWrappers {
   
   class RichFunction1AsLongToDoubleFunction(private val underlying: scala.Function1[Long, Double]) extends AnyVal {
     @inline def asJava: java.util.function.LongToDoubleFunction = underlying match {
-      case FromJavaLongToDoubleFunction((jf @ _)) => jf.asInstanceOf[java.util.function.LongToDoubleFunction]
+      case FromJavaLongToDoubleFunction((jf @ _)) => jf
       case _ => new AsJavaLongToDoubleFunction(underlying)
     }
   }
@@ -727,7 +727,7 @@ object FunctionWrappers {
   
   class RichLongToIntFunctionAsFunction1(private val underlying: java.util.function.LongToIntFunction) extends AnyVal {
     @inline def asScala: scala.Function1[Long, Int] = underlying match {
-      case AsJavaLongToIntFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, Int]]
+      case AsJavaLongToIntFunction((sf @ _)) => sf
       case _ => new FromJavaLongToIntFunction(underlying)
     }
   }
@@ -738,7 +738,7 @@ object FunctionWrappers {
   
   class RichFunction1AsLongToIntFunction(private val underlying: scala.Function1[Long, Int]) extends AnyVal {
     @inline def asJava: java.util.function.LongToIntFunction = underlying match {
-      case FromJavaLongToIntFunction((jf @ _)) => jf.asInstanceOf[java.util.function.LongToIntFunction]
+      case FromJavaLongToIntFunction((jf @ _)) => jf
       case _ => new AsJavaLongToIntFunction(underlying)
     }
   }
@@ -750,7 +750,7 @@ object FunctionWrappers {
   
   class RichLongUnaryOperatorAsFunction1(private val underlying: java.util.function.LongUnaryOperator) extends AnyVal {
     @inline def asScala: scala.Function1[Long, Long] = underlying match {
-      case AsJavaLongUnaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function1[Long, Long]]
+      case AsJavaLongUnaryOperator((sf @ _)) => sf
       case _ => new FromJavaLongUnaryOperator(underlying)
     }
   }
@@ -761,7 +761,7 @@ object FunctionWrappers {
   
   class RichFunction1AsLongUnaryOperator(private val underlying: scala.Function1[Long, Long]) extends AnyVal {
     @inline def asJava: java.util.function.LongUnaryOperator = underlying match {
-      case FromJavaLongUnaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.LongUnaryOperator]
+      case FromJavaLongUnaryOperator((jf @ _)) => jf
       case _ => new AsJavaLongUnaryOperator(underlying)
     }
   }
@@ -773,7 +773,7 @@ object FunctionWrappers {
   
   class RichObjDoubleConsumerAsFunction2[T](private val underlying: java.util.function.ObjDoubleConsumer[T]) extends AnyVal {
     @inline def asScala: scala.Function2[T, Double, Unit] = underlying match {
-      case AsJavaObjDoubleConsumer((sf @ _)) => sf.asInstanceOf[scala.Function2[T, Double, Unit]]
+      case AsJavaObjDoubleConsumer((sf @ _)) => sf
       case _ => new FromJavaObjDoubleConsumer[T](underlying)
     }
   }
@@ -800,7 +800,7 @@ object FunctionWrappers {
   
   class RichObjIntConsumerAsFunction2[T](private val underlying: java.util.function.ObjIntConsumer[T]) extends AnyVal {
     @inline def asScala: scala.Function2[T, Int, Unit] = underlying match {
-      case AsJavaObjIntConsumer((sf @ _)) => sf.asInstanceOf[scala.Function2[T, Int, Unit]]
+      case AsJavaObjIntConsumer((sf @ _)) => sf
       case _ => new FromJavaObjIntConsumer[T](underlying)
     }
   }
@@ -827,7 +827,7 @@ object FunctionWrappers {
   
   class RichObjLongConsumerAsFunction2[T](private val underlying: java.util.function.ObjLongConsumer[T]) extends AnyVal {
     @inline def asScala: scala.Function2[T, Long, Unit] = underlying match {
-      case AsJavaObjLongConsumer((sf @ _)) => sf.asInstanceOf[scala.Function2[T, Long, Unit]]
+      case AsJavaObjLongConsumer((sf @ _)) => sf
       case _ => new FromJavaObjLongConsumer[T](underlying)
     }
   }
@@ -854,7 +854,7 @@ object FunctionWrappers {
   
   class RichPredicateAsFunction1[T](private val underlying: java.util.function.Predicate[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, Boolean] = underlying match {
-      case AsJavaPredicate((sf @ _)) => sf.asInstanceOf[scala.Function1[T, Boolean]]
+      case AsJavaPredicate((sf @ _)) => sf
       case _ => new FromJavaPredicate[T](underlying)
     }
   }
@@ -881,7 +881,7 @@ object FunctionWrappers {
   
   class RichSupplierAsFunction0[T](private val underlying: java.util.function.Supplier[T]) extends AnyVal {
     @inline def asScala: scala.Function0[T] = underlying match {
-      case AsJavaSupplier((sf @ _)) => sf.asInstanceOf[scala.Function0[T]]
+      case AsJavaSupplier((sf @ _)) => sf
       case _ => new FromJavaSupplier[T](underlying)
     }
   }
@@ -908,7 +908,7 @@ object FunctionWrappers {
   
   class RichToDoubleBiFunctionAsFunction2[T, U](private val underlying: java.util.function.ToDoubleBiFunction[T, U]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, Double] = underlying match {
-      case AsJavaToDoubleBiFunction((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, Double]]
+      case AsJavaToDoubleBiFunction((sf @ _)) => sf
       case _ => new FromJavaToDoubleBiFunction[T, U](underlying)
     }
   }
@@ -935,7 +935,7 @@ object FunctionWrappers {
   
   class RichToDoubleFunctionAsFunction1[T](private val underlying: java.util.function.ToDoubleFunction[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, Double] = underlying match {
-      case AsJavaToDoubleFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[T, Double]]
+      case AsJavaToDoubleFunction((sf @ _)) => sf
       case _ => new FromJavaToDoubleFunction[T](underlying)
     }
   }
@@ -962,7 +962,7 @@ object FunctionWrappers {
   
   class RichToIntBiFunctionAsFunction2[T, U](private val underlying: java.util.function.ToIntBiFunction[T, U]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, Int] = underlying match {
-      case AsJavaToIntBiFunction((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, Int]]
+      case AsJavaToIntBiFunction((sf @ _)) => sf
       case _ => new FromJavaToIntBiFunction[T, U](underlying)
     }
   }
@@ -989,7 +989,7 @@ object FunctionWrappers {
   
   class RichToIntFunctionAsFunction1[T](private val underlying: java.util.function.ToIntFunction[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, Int] = underlying match {
-      case AsJavaToIntFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[T, Int]]
+      case AsJavaToIntFunction((sf @ _)) => sf
       case _ => new FromJavaToIntFunction[T](underlying)
     }
   }
@@ -1016,7 +1016,7 @@ object FunctionWrappers {
   
   class RichToLongBiFunctionAsFunction2[T, U](private val underlying: java.util.function.ToLongBiFunction[T, U]) extends AnyVal {
     @inline def asScala: scala.Function2[T, U, Long] = underlying match {
-      case AsJavaToLongBiFunction((sf @ _)) => sf.asInstanceOf[scala.Function2[T, U, Long]]
+      case AsJavaToLongBiFunction((sf @ _)) => sf
       case _ => new FromJavaToLongBiFunction[T, U](underlying)
     }
   }
@@ -1043,7 +1043,7 @@ object FunctionWrappers {
   
   class RichToLongFunctionAsFunction1[T](private val underlying: java.util.function.ToLongFunction[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, Long] = underlying match {
-      case AsJavaToLongFunction((sf @ _)) => sf.asInstanceOf[scala.Function1[T, Long]]
+      case AsJavaToLongFunction((sf @ _)) => sf
       case _ => new FromJavaToLongFunction[T](underlying)
     }
   }
@@ -1070,7 +1070,7 @@ object FunctionWrappers {
   
   class RichUnaryOperatorAsFunction1[T](private val underlying: java.util.function.UnaryOperator[T]) extends AnyVal {
     @inline def asScala: scala.Function1[T, T] = underlying match {
-      case AsJavaUnaryOperator((sf @ _)) => sf.asInstanceOf[scala.Function1[T, T]]
+      case AsJavaUnaryOperator((sf @ _)) => sf
       case _ => new FromJavaUnaryOperator[T](underlying)
     }
   }
@@ -1081,11 +1081,11 @@ object FunctionWrappers {
   
   class RichFunction1AsUnaryOperator[T](private val underlying: scala.Function1[T, T]) extends AnyVal {
     @inline def asJava: java.util.function.UnaryOperator[T] = underlying match {
-      case FromJavaUnaryOperator((jf @ _)) => jf.asInstanceOf[java.util.function.UnaryOperator[T]]
+      case FromJavaUnaryOperator((jf @ _)) => jf
       case _ => new AsJavaUnaryOperator[T](underlying)
     };
     @inline def asJavaUnaryOperator: java.util.function.UnaryOperator[T] = underlying match {
-      case FromJavaUnaryOperator((sf @ _)) => sf.asInstanceOf[java.util.function.UnaryOperator[T]]
+      case FromJavaUnaryOperator((sf @ _)) => sf
       case _ => new AsJavaUnaryOperator[T](underlying)
     }
   }

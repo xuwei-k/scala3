@@ -52,13 +52,13 @@ object FunctionConverters {
   
   
   @inline def asScalaFromBiFunction[T, U, R](jf: java.util.function.BiFunction[T, U, R]): scala.Function2[T, U, R] = jf match {
-    case AsJavaBiFunction((f @ _)) => f.asInstanceOf[scala.Function2[T, U, R]]
+    case AsJavaBiFunction((f @ _)) => f
     case _ => new FromJavaBiFunction[T, U, R](jf).asInstanceOf[scala.Function2[T, U, R]]
   }
   
   @inline def asJavaBiFunction[T, U, R](sf: scala.Function2[T, U, R]): java.util.function.BiFunction[T, U, R] = ((sf): AnyRef) match {
     case FromJavaBiFunction((f @ _)) => f.asInstanceOf[java.util.function.BiFunction[T, U, R]]
-    case _ => new AsJavaBiFunction[T, U, R](sf.asInstanceOf[scala.Function2[T, U, R]])
+    case _ => new AsJavaBiFunction[T, U, R](sf)
   }
   
   
@@ -86,13 +86,13 @@ object FunctionConverters {
   
   
   @inline def asScalaFromBinaryOperator[T](jf: java.util.function.BinaryOperator[T]): scala.Function2[T, T, T] = jf match {
-    case AsJavaBinaryOperator((f @ _)) => f.asInstanceOf[scala.Function2[T, T, T]]
+    case AsJavaBinaryOperator((f @ _)) => f
     case _ => new FromJavaBinaryOperator[T](jf).asInstanceOf[scala.Function2[T, T, T]]
   }
   
   @inline def asJavaBinaryOperator[T](sf: scala.Function2[T, T, T]): java.util.function.BinaryOperator[T] = ((sf): AnyRef) match {
     case FromJavaBinaryOperator((f @ _)) => f.asInstanceOf[java.util.function.BinaryOperator[T]]
-    case _ => new AsJavaBinaryOperator[T](sf.asInstanceOf[scala.Function2[T, T, T]])
+    case _ => new AsJavaBinaryOperator[T](sf)
   }
   
   
@@ -114,7 +114,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaBooleanSupplier(sf: scala.Function0[java.lang.Boolean]): java.util.function.BooleanSupplier = ((sf): AnyRef) match {
-    case FromJavaBooleanSupplier((f @ _)) => f.asInstanceOf[java.util.function.BooleanSupplier]
+    case FromJavaBooleanSupplier((f @ _)) => f
     case _ => new AsJavaBooleanSupplier(sf.asInstanceOf[scala.Function0[Boolean]])
   }
   
@@ -160,7 +160,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleBinaryOperator(sf: scala.Function2[java.lang.Double, java.lang.Double, java.lang.Double]): java.util.function.DoubleBinaryOperator = ((sf): AnyRef) match {
-    case FromJavaDoubleBinaryOperator((f @ _)) => f.asInstanceOf[java.util.function.DoubleBinaryOperator]
+    case FromJavaDoubleBinaryOperator((f @ _)) => f
     case _ => new AsJavaDoubleBinaryOperator(sf.asInstanceOf[scala.Function2[Double, Double, Double]])
   }
   
@@ -183,7 +183,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleConsumer(sf: scala.Function1[java.lang.Double, scala.runtime.BoxedUnit]): java.util.function.DoubleConsumer = ((sf): AnyRef) match {
-    case FromJavaDoubleConsumer((f @ _)) => f.asInstanceOf[java.util.function.DoubleConsumer]
+    case FromJavaDoubleConsumer((f @ _)) => f
     case _ => new AsJavaDoubleConsumer(sf.asInstanceOf[scala.Function1[Double, Unit]])
   }
   
@@ -229,7 +229,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoublePredicate(sf: scala.Function1[java.lang.Double, java.lang.Boolean]): java.util.function.DoublePredicate = ((sf): AnyRef) match {
-    case FromJavaDoublePredicate((f @ _)) => f.asInstanceOf[java.util.function.DoublePredicate]
+    case FromJavaDoublePredicate((f @ _)) => f
     case _ => new AsJavaDoublePredicate(sf.asInstanceOf[scala.Function1[Double, Boolean]])
   }
   
@@ -252,7 +252,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleSupplier(sf: scala.Function0[java.lang.Double]): java.util.function.DoubleSupplier = ((sf): AnyRef) match {
-    case FromJavaDoubleSupplier((f @ _)) => f.asInstanceOf[java.util.function.DoubleSupplier]
+    case FromJavaDoubleSupplier((f @ _)) => f
     case _ => new AsJavaDoubleSupplier(sf.asInstanceOf[scala.Function0[Double]])
   }
   
@@ -275,7 +275,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleToIntFunction(sf: scala.Function1[java.lang.Double, java.lang.Integer]): java.util.function.DoubleToIntFunction = ((sf): AnyRef) match {
-    case FromJavaDoubleToIntFunction((f @ _)) => f.asInstanceOf[java.util.function.DoubleToIntFunction]
+    case FromJavaDoubleToIntFunction((f @ _)) => f
     case _ => new AsJavaDoubleToIntFunction(sf.asInstanceOf[scala.Function1[Double, Int]])
   }
   
@@ -298,7 +298,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleToLongFunction(sf: scala.Function1[java.lang.Double, java.lang.Long]): java.util.function.DoubleToLongFunction = ((sf): AnyRef) match {
-    case FromJavaDoubleToLongFunction((f @ _)) => f.asInstanceOf[java.util.function.DoubleToLongFunction]
+    case FromJavaDoubleToLongFunction((f @ _)) => f
     case _ => new AsJavaDoubleToLongFunction(sf.asInstanceOf[scala.Function1[Double, Long]])
   }
   
@@ -321,19 +321,19 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaDoubleUnaryOperator(sf: scala.Function1[java.lang.Double, java.lang.Double]): java.util.function.DoubleUnaryOperator = ((sf): AnyRef) match {
-    case FromJavaDoubleUnaryOperator((f @ _)) => f.asInstanceOf[java.util.function.DoubleUnaryOperator]
+    case FromJavaDoubleUnaryOperator((f @ _)) => f
     case _ => new AsJavaDoubleUnaryOperator(sf.asInstanceOf[scala.Function1[Double, Double]])
   }
   
   
   @inline def asScalaFromFunction[T, R](jf: java.util.function.Function[T, R]): scala.Function1[T, R] = jf match {
-    case AsJavaFunction((f @ _)) => f.asInstanceOf[scala.Function1[T, R]]
+    case AsJavaFunction((f @ _)) => f
     case _ => new FromJavaFunction[T, R](jf).asInstanceOf[scala.Function1[T, R]]
   }
   
   @inline def asJavaFunction[T, R](sf: scala.Function1[T, R]): java.util.function.Function[T, R] = ((sf): AnyRef) match {
     case FromJavaFunction((f @ _)) => f.asInstanceOf[java.util.function.Function[T, R]]
-    case _ => new AsJavaFunction[T, R](sf.asInstanceOf[scala.Function1[T, R]])
+    case _ => new AsJavaFunction[T, R](sf)
   }
   
   
@@ -355,7 +355,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntBinaryOperator(sf: scala.Function2[java.lang.Integer, java.lang.Integer, java.lang.Integer]): java.util.function.IntBinaryOperator = ((sf): AnyRef) match {
-    case FromJavaIntBinaryOperator((f @ _)) => f.asInstanceOf[java.util.function.IntBinaryOperator]
+    case FromJavaIntBinaryOperator((f @ _)) => f
     case _ => new AsJavaIntBinaryOperator(sf.asInstanceOf[scala.Function2[Int, Int, Int]])
   }
   
@@ -378,7 +378,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntConsumer(sf: scala.Function1[java.lang.Integer, scala.runtime.BoxedUnit]): java.util.function.IntConsumer = ((sf): AnyRef) match {
-    case FromJavaIntConsumer((f @ _)) => f.asInstanceOf[java.util.function.IntConsumer]
+    case FromJavaIntConsumer((f @ _)) => f
     case _ => new AsJavaIntConsumer(sf.asInstanceOf[scala.Function1[Int, Unit]])
   }
   
@@ -424,7 +424,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntPredicate(sf: scala.Function1[java.lang.Integer, java.lang.Boolean]): java.util.function.IntPredicate = ((sf): AnyRef) match {
-    case FromJavaIntPredicate((f @ _)) => f.asInstanceOf[java.util.function.IntPredicate]
+    case FromJavaIntPredicate((f @ _)) => f
     case _ => new AsJavaIntPredicate(sf.asInstanceOf[scala.Function1[Int, Boolean]])
   }
   
@@ -447,7 +447,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntSupplier(sf: scala.Function0[java.lang.Integer]): java.util.function.IntSupplier = ((sf): AnyRef) match {
-    case FromJavaIntSupplier((f @ _)) => f.asInstanceOf[java.util.function.IntSupplier]
+    case FromJavaIntSupplier((f @ _)) => f
     case _ => new AsJavaIntSupplier(sf.asInstanceOf[scala.Function0[Int]])
   }
   
@@ -470,7 +470,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntToDoubleFunction(sf: scala.Function1[java.lang.Integer, java.lang.Double]): java.util.function.IntToDoubleFunction = ((sf): AnyRef) match {
-    case FromJavaIntToDoubleFunction((f @ _)) => f.asInstanceOf[java.util.function.IntToDoubleFunction]
+    case FromJavaIntToDoubleFunction((f @ _)) => f
     case _ => new AsJavaIntToDoubleFunction(sf.asInstanceOf[scala.Function1[Int, Double]])
   }
   
@@ -493,7 +493,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntToLongFunction(sf: scala.Function1[java.lang.Integer, java.lang.Long]): java.util.function.IntToLongFunction = ((sf): AnyRef) match {
-    case FromJavaIntToLongFunction((f @ _)) => f.asInstanceOf[java.util.function.IntToLongFunction]
+    case FromJavaIntToLongFunction((f @ _)) => f
     case _ => new AsJavaIntToLongFunction(sf.asInstanceOf[scala.Function1[Int, Long]])
   }
   
@@ -516,7 +516,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaIntUnaryOperator(sf: scala.Function1[java.lang.Integer, java.lang.Integer]): java.util.function.IntUnaryOperator = ((sf): AnyRef) match {
-    case FromJavaIntUnaryOperator((f @ _)) => f.asInstanceOf[java.util.function.IntUnaryOperator]
+    case FromJavaIntUnaryOperator((f @ _)) => f
     case _ => new AsJavaIntUnaryOperator(sf.asInstanceOf[scala.Function1[Int, Int]])
   }
   
@@ -539,7 +539,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongBinaryOperator(sf: scala.Function2[java.lang.Long, java.lang.Long, java.lang.Long]): java.util.function.LongBinaryOperator = ((sf): AnyRef) match {
-    case FromJavaLongBinaryOperator((f @ _)) => f.asInstanceOf[java.util.function.LongBinaryOperator]
+    case FromJavaLongBinaryOperator((f @ _)) => f
     case _ => new AsJavaLongBinaryOperator(sf.asInstanceOf[scala.Function2[Long, Long, Long]])
   }
   
@@ -562,7 +562,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongConsumer(sf: scala.Function1[java.lang.Long, scala.runtime.BoxedUnit]): java.util.function.LongConsumer = ((sf): AnyRef) match {
-    case FromJavaLongConsumer((f @ _)) => f.asInstanceOf[java.util.function.LongConsumer]
+    case FromJavaLongConsumer((f @ _)) => f
     case _ => new AsJavaLongConsumer(sf.asInstanceOf[scala.Function1[Long, Unit]])
   }
   
@@ -608,7 +608,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongPredicate(sf: scala.Function1[java.lang.Long, java.lang.Boolean]): java.util.function.LongPredicate = ((sf): AnyRef) match {
-    case FromJavaLongPredicate((f @ _)) => f.asInstanceOf[java.util.function.LongPredicate]
+    case FromJavaLongPredicate((f @ _)) => f
     case _ => new AsJavaLongPredicate(sf.asInstanceOf[scala.Function1[Long, Boolean]])
   }
   
@@ -631,7 +631,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongSupplier(sf: scala.Function0[java.lang.Long]): java.util.function.LongSupplier = ((sf): AnyRef) match {
-    case FromJavaLongSupplier((f @ _)) => f.asInstanceOf[java.util.function.LongSupplier]
+    case FromJavaLongSupplier((f @ _)) => f
     case _ => new AsJavaLongSupplier(sf.asInstanceOf[scala.Function0[Long]])
   }
   
@@ -654,7 +654,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongToDoubleFunction(sf: scala.Function1[java.lang.Long, java.lang.Double]): java.util.function.LongToDoubleFunction = ((sf): AnyRef) match {
-    case FromJavaLongToDoubleFunction((f @ _)) => f.asInstanceOf[java.util.function.LongToDoubleFunction]
+    case FromJavaLongToDoubleFunction((f @ _)) => f
     case _ => new AsJavaLongToDoubleFunction(sf.asInstanceOf[scala.Function1[Long, Double]])
   }
   
@@ -677,7 +677,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongToIntFunction(sf: scala.Function1[java.lang.Long, java.lang.Integer]): java.util.function.LongToIntFunction = ((sf): AnyRef) match {
-    case FromJavaLongToIntFunction((f @ _)) => f.asInstanceOf[java.util.function.LongToIntFunction]
+    case FromJavaLongToIntFunction((f @ _)) => f
     case _ => new AsJavaLongToIntFunction(sf.asInstanceOf[scala.Function1[Long, Int]])
   }
   
@@ -700,7 +700,7 @@ object FunctionConverters {
     * `import scala.jdk.FunctionConverters._` and use the extension methods instead.
     */
   @inline def asJavaLongUnaryOperator(sf: scala.Function1[java.lang.Long, java.lang.Long]): java.util.function.LongUnaryOperator = ((sf): AnyRef) match {
-    case FromJavaLongUnaryOperator((f @ _)) => f.asInstanceOf[java.util.function.LongUnaryOperator]
+    case FromJavaLongUnaryOperator((f @ _)) => f
     case _ => new AsJavaLongUnaryOperator(sf.asInstanceOf[scala.Function1[Long, Long]])
   }
   
@@ -798,13 +798,13 @@ object FunctionConverters {
   
   
   @inline def asScalaFromSupplier[T](jf: java.util.function.Supplier[T]): scala.Function0[T] = jf match {
-    case AsJavaSupplier((f @ _)) => f.asInstanceOf[scala.Function0[T]]
+    case AsJavaSupplier((f @ _)) => f
     case _ => new FromJavaSupplier[T](jf).asInstanceOf[scala.Function0[T]]
   }
   
   @inline def asJavaSupplier[T](sf: scala.Function0[T]): java.util.function.Supplier[T] = ((sf): AnyRef) match {
     case FromJavaSupplier((f @ _)) => f.asInstanceOf[java.util.function.Supplier[T]]
-    case _ => new AsJavaSupplier[T](sf.asInstanceOf[scala.Function0[T]])
+    case _ => new AsJavaSupplier[T](sf)
   }
   
   
@@ -947,12 +947,12 @@ object FunctionConverters {
   
   
   @inline def asScalaFromUnaryOperator[T](jf: java.util.function.UnaryOperator[T]): scala.Function1[T, T] = jf match {
-    case AsJavaUnaryOperator((f @ _)) => f.asInstanceOf[scala.Function1[T, T]]
+    case AsJavaUnaryOperator((f @ _)) => f
     case _ => new FromJavaUnaryOperator[T](jf).asInstanceOf[scala.Function1[T, T]]
   }
   
   @inline def asJavaUnaryOperator[T](sf: scala.Function1[T, T]): java.util.function.UnaryOperator[T] = ((sf): AnyRef) match {
     case FromJavaUnaryOperator((f @ _)) => f.asInstanceOf[java.util.function.UnaryOperator[T]]
-    case _ => new AsJavaUnaryOperator[T](sf.asInstanceOf[scala.Function1[T, T]])
+    case _ => new AsJavaUnaryOperator[T](sf)
   }
 }
