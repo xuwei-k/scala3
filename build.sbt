@@ -10,6 +10,12 @@ val `scala3-compiler-bootstrapped` = Build.`scala3-compiler-bootstrapped`
 
 val `scala3-repl` = Build.`scala3-repl`
 
+val meta = project.settings(
+  scalaVersion := "2.13.18",
+  scalacOptions := Nil,
+  libraryDependencies += "org.scalameta" %% "scalameta" % "4.14.3"
+)
+
 // The Standard Library
 val `scala-library-nonbootstrapped` = Build.`scala-library-nonbootstrapped`
 val `scala3-library-nonbootstrapped` = Build.`scala3-library-nonbootstrapped`
