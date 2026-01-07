@@ -44,7 +44,7 @@ class InstrumentCoverage extends MacroTransform with IdentityDenotTransformer:
   private var coverageExcludeFilePatterns: List[Pattern] = Nil
   private var lastCompiledFiles: Set[String] = Set.empty
 
-  override def run(using ctx: Context): Unit =
+  override def run(using ctx: Context): Unit = {
     val outputPath = ctx.settings.coverageOutputDir.value
 
     // Ensure the dir exists
@@ -60,9 +60,14 @@ class InstrumentCoverage extends MacroTransform with IdentityDenotTransformer:
 
     val coverageFilePath = Serializer.coverageFilePath(outputPath)
     val previousCoverage =
-      if Files.exists(coverageFilePath) then
-        Serializer.deserialize(coverageFilePath, ctx.settings.sourceroot.value)
-      else Coverage()
+      if (Files.exists(coverageFilePath)) {
+        val start = System.currentTimeMillis()
+        val x = Serializer.deserialize(coverageFilePath, ctx.settings.sourceroot.value)
+        println(s"deserialize ${System.currentTimeMillis() - start} ${ctx.source.file.file.nn.getAbsolutePath}")
+        x
+      } else {
+        Coverage()
+      }
 
     // Initialise a coverage object if it does not exist yet
     if ctx.base.coverage == null then
@@ -88,7 +93,10 @@ class InstrumentCoverage extends MacroTransform with IdentityDenotTransformer:
       }
     ctx.base.coverage.nn.statements.foreach(stmt => mergedCoverage.addStatement(stmt))
 
+    val start = System.currentTimeMillis()
     Serializer.serialize(mergedCoverage, outputPath, ctx.settings.sourceroot.value)
+    println(s"serialize ${System.currentTimeMillis() - start} ${ctx.source.file.file.nn.getAbsolutePath}")
+  }
 
   private def isClassIncluded(sym: Symbol)(using Context): Boolean =
     val fqn = sym.fullName.toText(ctx.printerFn(ctx)).show
