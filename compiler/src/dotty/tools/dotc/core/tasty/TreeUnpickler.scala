@@ -67,7 +67,7 @@ class TreeUnpickler(reader: TastyReader,
   import tpd.*
 
   /** A map from addresses of definition entries to the symbols they define */
-  private val symAtAddr  = new mutable.HashMap[Addr, Symbol]
+  private val symAtAddr  = AddrMap.empty[Symbol]
 
   private def addrOfSymbol(sym: Symbol): Option[Addr] = symAtAddr.iterator.collectFirst {
     case (addr, s) if s == sym => addr
@@ -82,13 +82,13 @@ class TreeUnpickler(reader: TastyReader,
    *  Used to remember trees of symbols that are created by a completion. Emptied
    *  once the tree is inlined into a larger tree.
    */
-  private val treeAtAddr = new mutable.HashMap[Addr, Tree]
+  private val treeAtAddr = AddrMap.empty[Tree]
 
   /** A map from addresses of type entries to the types they define.
    *  Currently only populated for types that might be recursively referenced
    *  from within themselves (i.e. RecTypes, LambdaTypes).
    */
-  private val typeAtAddr = new mutable.HashMap[Addr, Type]
+  private val typeAtAddr = AddrMap.empty[Type]
 
   /** If this is a pickled quote, the owner of the quote, otherwise NoSymbol. */
   private var rootOwner: Symbol = NoSymbol
